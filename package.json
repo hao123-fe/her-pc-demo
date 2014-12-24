@@ -1,0 +1,18 @@
+{
+  "name": "her-pc-demo",
+  "version": "0.0.1",
+  "description": "a demo run on HER",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fis",
+    "her",
+    "her-fis",
+    "fis-plus",
+    "demo"
+  ],
+  "author": "fansekey@gmail.com",
+  "modifier": "winty2013@gmail.com",
+  "license": "MIT"
+}
