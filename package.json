@@ -1,7 +1,7 @@
 {
   "name": "her-pc-demo",
   "version": "0.0.2",
-  "description": "a demo run on HER",
+  "description": "a fis pc demo run on HER",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
