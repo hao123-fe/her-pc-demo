@@ -1,6 +1,6 @@
 <?php
 
-$github = 'https://github.com/hao123-dev/her/';
+$github = 'https://github.com/hao123-fe/her/';
 
 $fisgithub = 'https://github.com/fex-team/fis';
 $github_wiki = $fisgithub . '/wiki/';
