@@ -5,6 +5,10 @@
  *
  * @param array $params
  * @param Smarty $smarty
+ * @return void
+ * @see BigPipeResource::registModule
+ * @see BigPipe::currentContext
+ * @see PageletContext->addRequire
  */
 function smarty_function_require($params, $smarty){
     $link = $params['name'];
@@ -13,12 +17,10 @@ function smarty_function_require($params, $smarty){
     BigPipeResource::registModule($link);
 
     $context   = BigPipe::currentContext();
+    $resource =  BigPipeResource::getResourceByPath($link);
 
-    //$ext = substr(strrchr(json_decode($link), "."), 1);
-    $ext = substr(strrchr($link, "."), 1);
-    switch ($ext) {
+    switch ($resource["type"]) {
         case 'css':
-        case 'less':
             $on = isset($params['on']) ? $params['on'] : 'beforedisplay';
             break;
         case 'js':

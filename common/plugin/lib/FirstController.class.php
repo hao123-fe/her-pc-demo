@@ -23,7 +23,6 @@ class FirstController extends PageController
     private $state = self::STAT_COLLECT; //初始状态
     private $headInnerHTML = null;
     private $bodyInnerHTML = null;
-    //private $pagelets = array();
     private $loadedResource = array();
     
     protected $sessionId = 0; //此次会话ID,用于自动生成不重复id,第一次默认为0
@@ -186,10 +185,8 @@ class FirstController extends PageController
      */
     protected function setupBigrender($context)
     {
-        //echo $this->bodyInnerHTML;
         if(isset($context->bigrender)){
             $eventType = "beforeload";
-            //var_dump(BigPipe::$bigrenderLib);
             $context->addRequire($eventType, BigPipe::$bigrenderLib);
             $context->addHook($eventType, BigPipe::getBigrenderCode());
         }

@@ -9,5 +9,5 @@ fis.config.merge({
             left_delimiter: "{%",
             right_delimiter: "%}"
         }
-    },
+    }
 });

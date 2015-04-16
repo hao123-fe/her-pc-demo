@@ -1,33 +1,26 @@
 <?php
 /**
- * 资源管理类 
- * 
- * @author Tobias Schlitt <toby@php.net> 
+ * 资源管理类
+ *
+ * @author Tobias Schlitt <toby@php.net>
  * @license PHP Version 3.0 {@link http://www.php.net/license/3_0.txt}
  */
 class BigPipeResource
 {
-    private static $map = array();
-    private static $fismap = array("res"=>array());
-    private static $registedMoudle = array(
-        'her' => array(),
-        'fis' => array()
+    private static $map = array(
+        "res"=>array(),
+        "her"=>array()
     );
+    private static $registedMoudle = array();
     public static $knownResources = array();
-    
+
     public static function setupMap($map)
     {
-        # code...
-        self::$map = BigPipe::array_merge(self::$map, $map);
+        self::$map["res"] = array_merge(self::$map["res"], $map["res"]);
+        self::$map["her"] = array_merge(self::$map["her"], $map["her"]);
     }
 
-    public static function setupFisMap($map)
-    {
-        # code...
-        self::$fismap["res"] = array_merge(self::$fismap["res"], $map["res"]);
-    }
-
-    public static function registModule($name, $fis = false)
+    public static function registModule($name)
     {
         $intPos = strpos($name, ':');
 
@@ -37,41 +30,38 @@ class BigPipeResource
             $femodule = substr($name, 0, $intPos);
         }
 
-        //$configPath = SMARTY_TEMPLATE_DIR . '/config';
-        //$configPath = SMARTY_CONF_DIR;
         $configPath = BIGPIPE_CONF_DIR;
-        
-        if(!in_array($femodule, self::$registedMoudle['her'])){
-            $hermapPath = $configPath . '/' . $femodule . '-hermap.json';
-            $hermap     = json_decode(file_get_contents($hermapPath), true);
-            BigPipeResource::setupMap($hermap);
-            self::$registedMoudle['her'][] = $femodule;
-        }
 
-        if($fis && !in_array($femodule, self::$registedMoudle['fis'])){
-            $fismapPath = $configPath . '/' . $femodule . '-map.json';
-            $fismap     = json_decode(file_get_contents($fismapPath), true);
-            BigPipeResource::setupFisMap($fismap);
-            self::$registedMoudle['fis'][] = $femodule;
+        if(!in_array($femodule, self::$registedMoudle)){
+
+            $mapPath = $configPath . '/' . $femodule . '-map.json';
+            $map     = json_decode(file_get_contents($mapPath), true);
+            BigPipeResource::setupMap($map);
+            self::$registedMoudle[] = $femodule;
         }
-        //var_dump(self::$registedMoudle);
-        //$hermap = BigPipe::array_merge($commonMap, $hermap);
     }
 
-    public static function getFisResourceByPath($path)
+    public static function getTplByPath($path)
     {
-        return self::$fismap["res"][$path];
+        return self::$map["res"][$path];
     }
 
     public static function getResourceByPath($path, $type = null){
-        $map = self::$map;
+
+        $map = self::$map["her"];
+        $resource = self::getResource($map,$path,$type);
+        if($resource)
+          return $resource;
+        return false;
+    }
+
+    public static function getResource($map,$path, $type){
         foreach ($map as $id => $resource) {
-            if( (!isset($type) || $type == $resource['type']) 
+            if( (!isset($type) || $type == $resource['type'])
                 && in_array($path, $resource['defines'])){
                 $resource['id'] = $id;
                 if(!isset($resource['requires'])) $resource['requires'] = array();
                 if(!isset($resource['requireAsyncs'])) $resource['requireAsyncs'] = array();
-                //return array($id, $resource);
                 return $resource;
             }
         }
@@ -105,7 +95,7 @@ class BigPipeResource
 
             if(isset($dependResources[$id])){
                 continue;
-            }            
+            }
             $dependResources[$id] = $last;
 
             $lastDepends = self::getDepend($last, $asyncs);
